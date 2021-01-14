@@ -39,4 +39,8 @@ public class User {
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime updatedAt;
+	
+	public boolean isNew() {
+		return getId() == null;
+	}
 }
