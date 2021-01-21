@@ -24,7 +24,10 @@ public class User {
 	private Long id;
 	
 	@Column(nullable = false)
-	private String name;
+	private String firstName;
+	
+	@Column(nullable = false)
+	private String lastName;
 	
 	@Column(nullable = false)
 	private String email;

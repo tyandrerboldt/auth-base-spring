@@ -11,8 +11,11 @@ public class UserModel {
 	@ApiModelProperty(example = "1")
 	private Long id;
 	
-	@ApiModelProperty(example = "João da Silva")
-	private String name;
+	@ApiModelProperty(example = "João")
+	private String firstName;
+	
+	@ApiModelProperty(example = "Silva")
+	private String lastName;
 
 	@ApiModelProperty(example = "joao@email.com.br")
 	private String email;
