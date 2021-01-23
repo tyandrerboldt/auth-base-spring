@@ -26,16 +26,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory()
-			.withClient("authbase-web")
-			.secret(passwordEncoder.encode("123456"))
-			.authorizedGrantTypes("password", "refresh_token")
-			.scopes("write", "read")
-			.accessTokenValiditySeconds(60 * 60 * 6)
-			.refreshTokenValiditySeconds(60 * 60 * 24 * 7)
-		.and()
-			.withClient("checktoken")
-			.secret("check123");
+		clients
+			.inMemory()
+				.withClient("authbase-web")
+				.secret(passwordEncoder.encode("123456"))
+				.authorizedGrantTypes("password", "refresh_token")
+				.scopes("write", "read")
+				.accessTokenValiditySeconds(60 * 60 * 6)
+				.refreshTokenValiditySeconds(60 * 60 * 24 * 7)
+			.and()
+				.withClient("authbase-backend-client")
+				.secret(passwordEncoder.encode("123456"))
+				.authorizedGrantTypes("client_credentials")
+				.scopes("read")
+			.and()
+				.withClient("checktoken")
+				.secret("check123");
 	}
 	
 	@Override
