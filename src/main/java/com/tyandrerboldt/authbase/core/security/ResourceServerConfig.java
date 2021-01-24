@@ -1,5 +1,7 @@
 package com.tyandrerboldt.authbase.core.security;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 @Configuration
 @EnableWebSecurity
@@ -20,7 +24,13 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.anyRequest().authenticated()
 		.and()
-		.oauth2ResourceServer().opaqueToken();
+		.oauth2ResourceServer().jwt();
+	}
+	
+	@Bean
+	public JwtDecoder jwtDecoder() {
+		SecretKeySpec secretKey = new SecretKeySpec("3ç43k5lçdkrweçdsFSsdaLSD525jkljwekjDKJDSdKSjdSKJdsKJD".getBytes(), "HmacSHA256");
+		return NimbusJwtDecoder.withSecretKey(secretKey).build();
 	}
 	
 	@Override
