@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 public class User {
 
 	@Id
+	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
