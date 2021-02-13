@@ -1,7 +1,8 @@
 package com.tyandrerboldt.authbase.core.security.authorizationserver;
 
-import java.util.Collections;
+import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import lombok.Getter;
@@ -14,8 +15,9 @@ public class AuthUser extends User{
 	private Long userId;
 	private String fullName;
 	
-	public AuthUser(com.tyandrerboldt.authbase.domain.models.User user) {
-		super(user.getEmail(), user.getPassword(), Collections.emptyList());
+	public AuthUser(com.tyandrerboldt.authbase.domain.models.User user,
+			Collection<? extends GrantedAuthority> authorities) {
+		super(user.getEmail(), user.getPassword(), authorities);
 		
 		this.userId = user.getId();
 		this.fullName = user.getFirstName() + " " + user.getLastName();

@@ -42,11 +42,11 @@ public class User {
 	private String password;
 	
 	@CreationTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
+	@Column(nullable = false, columnDefinition = "timestamp")
 	private OffsetDateTime createdAt;
 	
 	@UpdateTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
+	@Column(nullable = false, columnDefinition = "timestamp")
 	private OffsetDateTime updatedAt;
 	
 	@ManyToMany
