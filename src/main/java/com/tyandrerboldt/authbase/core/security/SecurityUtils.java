@@ -17,4 +17,7 @@ public class SecurityUtils {
 		return jwt.getClaim("user_id");
 	}
 	
+	public boolean itsYourProfile(Long userId) {
+		return getUserId() == userId;
+	}
 }
