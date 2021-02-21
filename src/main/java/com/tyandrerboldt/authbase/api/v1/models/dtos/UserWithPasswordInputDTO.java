@@ -14,4 +14,7 @@ public class UserWithPasswordInputDTO extends UserInputDTO{
 	@NotBlank
 	private String password;
 	
+	@ApiModelProperty(example = "123")
+	private String passwordConfirm;
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tyandrerboldt.authbase.api.v1.mappers.assemblers.UserModelAssembler;
 import com.tyandrerboldt.authbase.api.v1.mappers.disassemblers.UserInputDTODisassembler;
 import com.tyandrerboldt.authbase.api.v1.models.UserModel;
+import com.tyandrerboldt.authbase.api.v1.models.dtos.PasswordInputDTO;
+import com.tyandrerboldt.authbase.api.v1.models.dtos.UserInputDTO;
 import com.tyandrerboldt.authbase.api.v1.models.dtos.UserWithPasswordInputDTO;
 import com.tyandrerboldt.authbase.domain.models.User;
 import com.tyandrerboldt.authbase.domain.services.UserService;
@@ -44,14 +47,26 @@ public class UserController {
 		return userModelAssembler.toModel(user);
 	}
 	
-	@PostMapping("/userId")
+	@PutMapping("/{userId}")
 	@PreAuthorize("hasAuthority('SCOPE_WRITE') and "
-			+ "(hasAuthority('UPDATE_USER') or (@securityUtils.itsYourProfile(#userId)))")
+			+ "(hasAuthority('UPDATE_USER') or @securityUtils.itsYourProfile(#userId))")
 	public UserModel save(@PathVariable Long userId,
-			@RequestBody @Valid UserWithPasswordInputDTO userInput) {
-		return null;
+			@RequestBody @Valid UserInputDTO userInput) {
+		User currentUser = userService.findOrFail(userId);
+		userInputDTODisassembler.copyToDomainObject(userInput, currentUser);
+		currentUser = userService.save(currentUser);
+		
+		return userModelAssembler.toModel(currentUser);
 	}
 	
+	@PutMapping("/{userId}/password")
+	@PreAuthorize("hasAuthority('SCOPE_WRITE') and @securityUtils.itsYourProfile(#userId)")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void changePassword(@PathVariable Long userId,
+			@RequestBody @Valid PasswordInputDTO passwordInput) {
+		userService.changePassword(userId, passwordInput.getPassword(), passwordInput.getPasswordConfirm());
+	}
+		
 	@GetMapping("/verify")
 	public void verifyAuth() {
 		System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
