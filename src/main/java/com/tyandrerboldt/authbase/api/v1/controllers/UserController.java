@@ -22,6 +22,8 @@ import com.tyandrerboldt.authbase.api.v1.models.dtos.PasswordInputDTO;
 import com.tyandrerboldt.authbase.api.v1.models.dtos.UserInputDTO;
 import com.tyandrerboldt.authbase.api.v1.models.dtos.UserWithPasswordInputDTO;
 import com.tyandrerboldt.authbase.domain.models.User;
+import com.tyandrerboldt.authbase.domain.services.SendMailService;
+import com.tyandrerboldt.authbase.domain.services.SendMailService.Message;
 import com.tyandrerboldt.authbase.domain.services.UserService;
 
 @RestController
@@ -36,6 +38,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	SendMailService sendMailService;
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('CREATE_USER')")
@@ -65,6 +70,12 @@ public class UserController {
 	public void changePassword(@PathVariable Long userId,
 			@RequestBody @Valid PasswordInputDTO passwordInput) {
 		userService.changePassword(userId, passwordInput.getPassword(), passwordInput.getPasswordConfirm());
+		var message = Message.builder()
+				.subject("Mudança de senha")
+				.body("change-password.html")
+				.receiver("tyandrer.boldt@gmail.com")
+				.build();
+		sendMailService.send(message);
 	}
 		
 	@GetMapping("/verify")
